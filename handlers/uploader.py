@@ -1,4 +1,3 @@
-
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # (c) AFK
@@ -67,9 +66,13 @@ class Upload_to_Tg:
         duration, thumbnail = await Upload_to_Tg.get_thumb_duration(self)
         w, h = await Vidtools.get_width_height(self.file_path)
         start_time = time.time()
+        
+        # Use target chat if set, otherwise use current chat
+        target_chat = Config.TARGET_CHAT if Config.TARGET_CHAT else self.m.chat.id
+        
         try:
             await self.bot.send_video(
-                chat_id=self.m.chat.id,
+                chat_id=target_chat,
                 video=self.file_path,
                 supports_streaming=True,
                 caption=self.caption,
@@ -86,7 +89,7 @@ class Upload_to_Tg:
         except Exception as e:
             LOGS.error(str(e))
             await self.bot.send_document(
-                chat_id=self.m.chat.id,
+                chat_id=target_chat,
                 document=self.file_path,
                 caption=self.caption,
                 thumb=thumbnail,
@@ -101,9 +104,13 @@ class Upload_to_Tg:
 
     async def upload_doc(self):
         start_time = time.time()
+        
+        # Use target chat if set, otherwise use current chat
+        target_chat = Config.TARGET_CHAT if Config.TARGET_CHAT else self.m.chat.id
+        
         try:
             await self.bot.send_document(
-                chat_id=self.m.chat.id,
+                chat_id=target_chat,
                 document=self.file_path,
                 caption=self.caption,
                 thumb=await Upload_to_Tg.get_doc_thumb(self),

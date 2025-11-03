@@ -26,7 +26,10 @@ class Config(object):
     for i in range(len(GROUPS)):
         GROUPS[i] = int(GROUPS[i])
 
-    LOG_CH = os.environ.get("LOG_CH", "-1002059340064")
+    LOG_CH = int(os.environ.get("LOG_CH", "-1002059340064"))
+    TARGET_CHAT = None  # Will be set by /set_target command
+    CLASSPLUS_EMAIL = None  # Will be set by /login_classplus command
+    CLASSPLUS_PASSWORD = None  # Will be set by /login_classplus command
 
 # TelegramLogHandler is a custom handler which is inherited from an existing handler. ie, StreamHandler.
 logging.basicConfig(

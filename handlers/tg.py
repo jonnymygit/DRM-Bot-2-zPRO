@@ -163,7 +163,16 @@ class TgClient(TgHandler):
                     txt=txt_name, no_of_links=len(nameLinks))
             )
             user_index = await self.bot.listen(self.m.chat.id)
-            index = int(user_index.text)
+            # Handle range parsing like "1-145" or single numbers
+            try:
+                if "-" in user_index.text:
+                    # For ranges like "1-145", take the first number
+                    index = int(user_index.text.split("-")[0])
+                else:
+                    index = int(user_index.text)
+            except ValueError:
+                # If parsing fails, default to 1
+                index = 1
             num = TgClient.index_(index=index)
 
             msg3 = await self.bot.send_message(
