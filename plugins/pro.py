@@ -220,10 +220,13 @@ async def Pro(bot: AFK, m: Message):
     fail_count = 0
 
     for i in range(num, len(nameLinks)):
-        # Initialize variables to avoid UnboundLocalError
-        caption_name = f"Course {i+1}"
+        # Initialize ALL variables at the start to prevent UnboundLocalError
+        caption_name = f"Unknown Course {i+1}"
         url = "N/A"
         Show = None
+        name = "Unknown"
+        link = "N/A"
+        file_name = f"Unknown_{i+1}"
         
         try:
             name = BOT.parse_name(nameLinks[i][0])
@@ -267,7 +270,8 @@ async def Pro(bot: AFK, m: Message):
 
             else:
                 fail_count += 1
-                await Show.delete(True)
+                if Show:
+                    await Show.delete(True)
                 await bot.send_message(
                     chat_id=Config.LOG_CH,
                     text=Msg.ERROR_MSG.format(
@@ -287,15 +291,20 @@ async def Pro(bot: AFK, m: Message):
                     await Show.delete(True)
             except:
                 pass
-            await bot.send_message(
-                chat_id=Config.LOG_CH,
-                text=Msg.ERROR_MSG.format(
-                    error=str(r),
-                    no_of_files=len(error_list),
-                    file_name=caption_name,
-                    file_link=url,
+            
+            # Safe error logging with all variables guaranteed to exist
+            try:
+                await bot.send_message(
+                    chat_id=Config.LOG_CH,
+                    text=Msg.ERROR_MSG.format(
+                        error=str(r),
+                        no_of_files=len(error_list),
+                        file_name=caption_name,
+                        file_link=url,
+                    )
                 )
-            )
+            except Exception as log_error:
+                LOGS.error(f"Failed to send error log: {log_error}")
             continue
 
     # Cleanup
