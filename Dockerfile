@@ -37,4 +37,4 @@ RUN pip install --upgrade pip && \
     pip install -r requirements.txt
 
 # Start the bot
-CMD ["sh", "start.sh"]
+CMD ["python3", "-u", "main.py"]
